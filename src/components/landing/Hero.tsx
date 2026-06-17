@@ -17,16 +17,16 @@ export function Hero() {
           <div className="lg:col-span-6">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
               <Sparkles className="h-3.5 w-3.5" />
-              MVP 2026
+              Anti-Panik di Pusat Keramaian
             </span>
 
             <h1 className="mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-[68px]">
-              Jika Anak Terpisah, <span className="text-primary">Orang Baik</span> Bisa Langsung Menghubungi Anda.
+              Temukan Jalan Pulang dengan <span className="text-primary">Satu Scan.</span>
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-secondary-foreground md:text-xl">
-              TemuAnak membantu orang tua membuat QR Darurat yang dapat dipindai siapa saja
-              untuk menghubungi keluarga dengan cepat.
+              Jaga si kecil di mall, taman bermain, atau tempat wisata dengan badge QR sementara.
+              Siapa pun bisa scan untuk hubungi kamu tanpa ribet instal aplikasi.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
