@@ -52,13 +52,13 @@ export function Nav() {
 
         <div className="hidden items-center gap-3 md:flex">
           <a
-            href="#hero"
+            href="/auth"
             className="text-sm font-semibold text-secondary-foreground transition-colors hover:text-foreground"
           >
             Masuk
           </a>
           <a
-            href="#hero"
+            href="/auth"
             className="inline-flex h-10 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-primary-glow)] active:scale-[0.98]"
           >
             Buat QR Gratis
@@ -89,7 +89,7 @@ export function Nav() {
               </a>
             ))}
             <a
-              href="#hero"
+              href="/auth"
               onClick={() => setOpen(false)}
               className="mt-2 inline-flex h-12 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground"
             >
