@@ -1,0 +1,20 @@
+{
+  "name": "TemuAnak — QR Darurat Anak",
+  "short_name": "TemuAnak",
+  "description": "QR Darurat untuk membantu anak kembali ke orang tuanya.",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAFAF8",
+  "theme_color": "#2563EB",
+  "lang": "id",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Tambah Profil Anak", "url": "/children/new" },
+    { "name": "Profil Saya", "url": "/children" }
+  ]
+}
