@@ -7,8 +7,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { supabase } from "@/integrations/supabase/client";
 
 const search = z.object({
-  type: z.enum(["email", "phone"]).default("email"),
-  value: z.string().min(3),
+  email: z.string().email(),
 });
 
 export const Route = createFileRoute("/auth/verify")({
@@ -18,7 +17,7 @@ export const Route = createFileRoute("/auth/verify")({
 });
 
 function VerifyPage() {
-  const { type, value } = Route.useSearch();
+  const { email } = Route.useSearch();
   const navigate = useNavigate();
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,16 +38,12 @@ function VerifyPage() {
   async function handleVerify(token: string) {
     setLoading(true);
     try {
-      const { error } =
-        type === "email"
-          ? await supabase.auth.verifyOtp({ email: value, token, type: "email" })
-          : await supabase.auth.verifyOtp({ phone: value, token, type: "sms" });
+      const { error } = await supabase.auth.verifyOtp({ email, token, type: "email" });
       if (error) throw error;
       toast.success("Berhasil masuk");
       navigate({ to: "/dashboard", replace: true });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Kode salah";
-      toast.error(msg);
+      toast.error(err instanceof Error ? err.message : "Kode salah");
       setCode("");
     } finally {
       setLoading(false);
@@ -58,10 +53,7 @@ function VerifyPage() {
   async function handleResend() {
     if (cooldown > 0) return;
     try {
-      const { error } =
-        type === "email"
-          ? await supabase.auth.signInWithOtp({ email: value })
-          : await supabase.auth.signInWithOtp({ phone: value });
+      const { error } = await supabase.auth.signInWithOtp({ email });
       if (error) throw error;
       toast.success("OTP baru dikirim");
       setCooldown(60);
@@ -86,7 +78,7 @@ function VerifyPage() {
         <h1 className="mt-8 text-4xl font-extrabold tracking-tight">Masukkan kode OTP</h1>
         <p className="mt-3 text-base text-muted-foreground">
           Kami mengirim 6 digit kode ke{" "}
-          <span className="font-semibold text-foreground">{value}</span>.
+          <span className="font-semibold text-foreground">{email}</span>.
         </p>
 
         <div className="mt-10 flex flex-col items-center gap-6 rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-card)]">

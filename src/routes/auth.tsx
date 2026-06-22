@@ -1,15 +1,15 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Mail, Phone, ShieldCheck, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, ShieldCheck, ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { normalizePhone, phoneRegex } from "@/lib/format";
+import { lovable } from "@/integrations/lovable/index";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Masuk · TemuAnak" },
-      { name: "description", content: "Masuk ke TemuAnak dengan OTP via Email atau SMS." },
+      { name: "description", content: "Masuk ke TemuAnak dengan OTP email atau akun Google." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -18,9 +18,9 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [tab, setTab] = useState<"email" | "phone">("email");
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -31,40 +31,43 @@ function AuthPage() {
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
     if (loading) return;
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      toast.error("Email tidak valid");
+      return;
+    }
     setLoading(true);
     try {
-      if (tab === "email") {
-        if (!/^\S+@\S+\.\S+$/.test(value)) {
-          toast.error("Email tidak valid");
-          return;
-        }
-        const { error } = await supabase.auth.signInWithOtp({
-          email: value.trim(),
-          options: { shouldCreateUser: true, emailRedirectTo: window.location.origin },
-        });
-        if (error) throw error;
-      } else {
-        if (!phoneRegex.test(value.replace(/\s/g, ""))) {
-          toast.error("Nomor HP tidak valid (contoh: 08123456789)");
-          return;
-        }
-        const phone = normalizePhone(value);
-        const { error } = await supabase.auth.signInWithOtp({
-          phone,
-          options: { shouldCreateUser: true },
-        });
-        if (error) throw error;
-      }
-      toast.success("Kode OTP dikirim");
-      navigate({
-        to: "/auth/verify",
-        search: { type: tab, value: tab === "phone" ? normalizePhone(value) : value.trim() },
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim(),
+        options: { shouldCreateUser: true, emailRedirectTo: window.location.origin },
       });
+      if (error) throw error;
+      toast.success("Kode OTP dikirim ke email");
+      navigate({ to: "/auth/verify", search: { email: email.trim() } });
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Gagal mengirim OTP";
-      toast.error(msg);
+      toast.error(err instanceof Error ? err.message : "Gagal mengirim OTP");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleGoogle() {
+    if (googleLoading) return;
+    setGoogleLoading(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        toast.error(result.error.message ?? "Gagal masuk dengan Google");
+        setGoogleLoading(false);
+        return;
+      }
+      if (result.redirected) return;
+      navigate({ to: "/dashboard", replace: true });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Gagal masuk dengan Google");
+      setGoogleLoading(false);
     }
   }
 
@@ -81,45 +84,45 @@ function AuthPage() {
         <div className="mt-12">
           <h1 className="text-4xl font-extrabold tracking-tight">Masuk ke TemuAnak</h1>
           <p className="mt-3 text-base text-muted-foreground">
-            Tanpa password. Kami akan kirim kode OTP ke email atau HP kamu.
+            Tanpa password. Pilih lewat email atau akun Google.
           </p>
         </div>
 
-        <div className="mt-8 rounded-3xl border border-border bg-card p-2 shadow-[var(--shadow-card)]">
-          <div className="grid grid-cols-2 gap-1 rounded-2xl bg-secondary p-1">
-            <button
-              onClick={() => setTab("email")}
-              className={`inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold transition-all ${
-                tab === "email" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
-              }`}
-            >
-              <Mail className="h-4 w-4" /> Email
-            </button>
-            <button
-              onClick={() => setTab("phone")}
-              className={`inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold transition-all ${
-                tab === "phone" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
-              }`}
-            >
-              <Phone className="h-4 w-4" /> Nomor HP
-            </button>
+        <div className="mt-8 rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-card)]">
+          <button
+            type="button"
+            onClick={handleGoogle}
+            disabled={googleLoading || loading}
+            className="inline-flex h-12 w-full items-center justify-center gap-3 rounded-full border border-border bg-card px-6 text-base font-semibold text-foreground transition-all hover:bg-secondary disabled:opacity-60"
+          >
+            {googleLoading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <>
+                <GoogleIcon /> Lanjut dengan Google
+              </>
+            )}
+          </button>
+
+          <div className="my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <span className="h-px flex-1 bg-border" /> atau <span className="h-px flex-1 bg-border" />
           </div>
 
-          <form onSubmit={handleSend} className="px-3 pb-3 pt-4">
-            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {tab === "email" ? "Email" : "Nomor WhatsApp"}
+          <form onSubmit={handleSend}>
+            <label className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <Mail className="h-3.5 w-3.5" /> Email
             </label>
             <input
-              type={tab === "email" ? "email" : "tel"}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder={tab === "email" ? "nama@email.com" : "08123456789"}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="nama@email.com"
               className="mt-1.5 w-full rounded-2xl border border-border bg-background px-4 py-3.5 text-base outline-none transition-all focus:border-primary focus:ring-4 focus:ring-primary/15"
               required
             />
             <button
               type="submit"
-              disabled={loading || !value}
+              disabled={loading || googleLoading || !email}
               className="mt-4 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 text-base font-semibold text-primary-foreground shadow-[var(--shadow-card)] transition-all hover:shadow-[var(--shadow-primary-glow)] disabled:opacity-60"
             >
               {loading ? (
@@ -138,5 +141,16 @@ function AuthPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+      <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z" />
+      <path fill="#34A853" d="M9 18c2.43 0 4.47-.81 5.96-2.18l-2.92-2.26c-.81.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z" />
+      <path fill="#FBBC05" d="M3.97 10.72A5.4 5.4 0 0 1 3.68 9c0-.6.1-1.18.29-1.72V4.95H.96A9 9 0 0 0 0 9c0 1.45.35 2.83.96 4.05l3.01-2.33z" />
+      <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .96 4.95L3.97 7.28C4.68 5.16 6.66 3.58 9 3.58z" />
+    </svg>
   );
 }
