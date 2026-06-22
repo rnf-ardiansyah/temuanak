@@ -27,7 +27,7 @@ export const listChildren = createServerFn({ method: "GET" })
 
 export const getChild = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
+  .validator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase
       .from("children")
@@ -42,7 +42,7 @@ export const getChild = createServerFn({ method: "GET" })
 
 export const createChild = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) => ChildInput.parse(d))
+  .validator((d: unknown) => ChildInput.parse(d))
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase
       .from("children")
@@ -55,7 +55,7 @@ export const createChild = createServerFn({ method: "POST" })
 
 export const updateChild = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: unknown) =>
+  .validator((d: unknown) =>
     z.object({ id: z.string().uuid(), patch: ChildInput.partial() }).parse(d),
   )
   .handler(async ({ data, context }) => {
@@ -70,7 +70,7 @@ export const updateChild = createServerFn({ method: "POST" })
 
 export const deleteChild = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
+  .validator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase
       .from("children")
