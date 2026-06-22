@@ -9,38 +9,166 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as QrTokenRouteImport } from './routes/qr.$token'
+import { Route as AuthVerifyRouteImport } from './routes/auth.verify'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedChildrenIndexRouteImport } from './routes/_authenticated/children.index'
+import { Route as AuthenticatedChildrenNewRouteImport } from './routes/_authenticated/children.new'
+import { Route as AuthenticatedChildrenIdIndexRouteImport } from './routes/_authenticated/children.$id.index'
+import { Route as AuthenticatedChildrenIdEditRouteImport } from './routes/_authenticated/children.$id.edit'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QrTokenRoute = QrTokenRouteImport.update({
+  id: '/qr/$token',
+  path: '/qr/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthVerifyRoute = AuthVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedChildrenIndexRoute =
+  AuthenticatedChildrenIndexRouteImport.update({
+    id: '/children/',
+    path: '/children/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedChildrenNewRoute =
+  AuthenticatedChildrenNewRouteImport.update({
+    id: '/children/new',
+    path: '/children/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedChildrenIdIndexRoute =
+  AuthenticatedChildrenIdIndexRouteImport.update({
+    id: '/children/$id/',
+    path: '/children/$id/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedChildrenIdEditRoute =
+  AuthenticatedChildrenIdEditRouteImport.update({
+    id: '/children/$id/edit',
+    path: '/children/$id/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/auth/verify': typeof AuthVerifyRoute
+  '/qr/$token': typeof QrTokenRoute
+  '/children/new': typeof AuthenticatedChildrenNewRoute
+  '/children/': typeof AuthenticatedChildrenIndexRoute
+  '/children/$id/edit': typeof AuthenticatedChildrenIdEditRoute
+  '/children/$id/': typeof AuthenticatedChildrenIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/auth/verify': typeof AuthVerifyRoute
+  '/qr/$token': typeof QrTokenRoute
+  '/children/new': typeof AuthenticatedChildrenNewRoute
+  '/children': typeof AuthenticatedChildrenIndexRoute
+  '/children/$id/edit': typeof AuthenticatedChildrenIdEditRoute
+  '/children/$id': typeof AuthenticatedChildrenIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRouteWithChildren
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/auth/verify': typeof AuthVerifyRoute
+  '/qr/$token': typeof QrTokenRoute
+  '/_authenticated/children/new': typeof AuthenticatedChildrenNewRoute
+  '/_authenticated/children/': typeof AuthenticatedChildrenIndexRoute
+  '/_authenticated/children/$id/edit': typeof AuthenticatedChildrenIdEditRoute
+  '/_authenticated/children/$id/': typeof AuthenticatedChildrenIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/auth/verify'
+    | '/qr/$token'
+    | '/children/new'
+    | '/children/'
+    | '/children/$id/edit'
+    | '/children/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/auth/verify'
+    | '/qr/$token'
+    | '/children/new'
+    | '/children'
+    | '/children/$id/edit'
+    | '/children/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/dashboard'
+    | '/auth/verify'
+    | '/qr/$token'
+    | '/_authenticated/children/new'
+    | '/_authenticated/children/'
+    | '/_authenticated/children/$id/edit'
+    | '/_authenticated/children/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren
+  QrTokenRoute: typeof QrTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +176,93 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/qr/$token': {
+      id: '/qr/$token'
+      path: '/qr/$token'
+      fullPath: '/qr/$token'
+      preLoaderRoute: typeof QrTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/verify': {
+      id: '/auth/verify'
+      path: '/verify'
+      fullPath: '/auth/verify'
+      preLoaderRoute: typeof AuthVerifyRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/children/': {
+      id: '/_authenticated/children/'
+      path: '/children'
+      fullPath: '/children/'
+      preLoaderRoute: typeof AuthenticatedChildrenIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/children/new': {
+      id: '/_authenticated/children/new'
+      path: '/children/new'
+      fullPath: '/children/new'
+      preLoaderRoute: typeof AuthenticatedChildrenNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/children/$id/': {
+      id: '/_authenticated/children/$id/'
+      path: '/children/$id'
+      fullPath: '/children/$id/'
+      preLoaderRoute: typeof AuthenticatedChildrenIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/children/$id/edit': {
+      id: '/_authenticated/children/$id/edit'
+      path: '/children/$id/edit'
+      fullPath: '/children/$id/edit'
+      preLoaderRoute: typeof AuthenticatedChildrenIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedChildrenNewRoute: typeof AuthenticatedChildrenNewRoute
+  AuthenticatedChildrenIndexRoute: typeof AuthenticatedChildrenIndexRoute
+  AuthenticatedChildrenIdEditRoute: typeof AuthenticatedChildrenIdEditRoute
+  AuthenticatedChildrenIdIndexRoute: typeof AuthenticatedChildrenIdIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedChildrenNewRoute: AuthenticatedChildrenNewRoute,
+  AuthenticatedChildrenIndexRoute: AuthenticatedChildrenIndexRoute,
+  AuthenticatedChildrenIdEditRoute: AuthenticatedChildrenIdEditRoute,
+  AuthenticatedChildrenIdIndexRoute: AuthenticatedChildrenIdIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface AuthRouteChildren {
+  AuthVerifyRoute: typeof AuthVerifyRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthVerifyRoute: AuthVerifyRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRouteWithChildren,
+  QrTokenRoute: QrTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
