@@ -36,7 +36,7 @@ export function Personas() {
         <SectionHeading
           eyebrow="Untuk Siapa"
           title={<>Dipakai di Tempat yang <br className="hidden md:block" /> Paling Membutuhkannya.</>}
-          description="TemuAnak bisa dipakai siapa saja yang bertanggung jawab atas anak — di rumah, sekolah, atau tempat umum."
+          description="Temu Anak bisa dipakai siapa saja yang bertanggung jawab atas anak — di rumah, sekolah, atau tempat umum."
         />
 
         <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4" data-reveal>

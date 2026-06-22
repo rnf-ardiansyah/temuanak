@@ -32,7 +32,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-[var(--shadow-card)]">
               <ShieldCheck className="h-5 w-5" />
             </span>
-            <span className="text-lg font-bold tracking-tight">TemuAnak</span>
+            <span className="text-lg font-bold tracking-tight">Temu Anak</span>
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
             {nav.map((n) => {

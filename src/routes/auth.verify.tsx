@@ -13,7 +13,7 @@ const search = z.object({
 
 export const Route = createFileRoute("/auth/verify")({
   validateSearch: (s) => search.parse(s),
-  head: () => ({ meta: [{ title: "Verifikasi · TemuAnak" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Verifikasi · Temu Anak" }, { name: "robots", content: "noindex" }] }),
   component: VerifyPage,
 });
 
@@ -80,7 +80,7 @@ function VerifyPage() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-[var(--shadow-card)]">
             <ShieldCheck className="h-5 w-5" />
           </span>
-          <span className="text-lg font-bold tracking-tight">TemuAnak</span>
+          <span className="text-lg font-bold tracking-tight">Temu Anak</span>
         </div>
 
         <h1 className="mt-8 text-4xl font-extrabold tracking-tight">Masukkan kode OTP</h1>

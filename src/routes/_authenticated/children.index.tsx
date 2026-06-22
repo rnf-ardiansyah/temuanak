@@ -11,7 +11,7 @@ const childrenQuery = (fn: () => Promise<unknown>) =>
   queryOptions({ queryKey: ["children"], queryFn: () => fn() });
 
 export const Route = createFileRoute("/_authenticated/children/")({
-  head: () => ({ meta: [{ title: "Profil Anak · TemuAnak" }] }),
+  head: () => ({ meta: [{ title: "Profil Anak · Temu Anak" }] }),
   component: ChildrenList,
 });
 

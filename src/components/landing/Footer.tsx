@@ -30,7 +30,7 @@ export function Footer() {
               <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground">
                 <ShieldCheck className="h-5 w-5" />
               </span>
-              <span className="text-lg font-bold tracking-tight text-foreground">TemuAnak</span>
+              <span className="text-lg font-bold tracking-tight text-foreground">Temu Anak</span>
             </a>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               QR Darurat untuk membantu anak kembali ke orang tuanya. Dibuat untuk keluarga Indonesia.
@@ -69,7 +69,7 @@ export function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-border pt-8 md:flex-row md:items-center">
-          <p className="text-sm text-muted-foreground">© 2026 TemuAnak. Semua hak dilindungi.</p>
+          <p className="text-sm text-muted-foreground">© 2026 Temu Anak. Semua hak dilindungi.</p>
           <p className="text-xs text-muted-foreground">
             Dibuat dengan ❤️ untuk orang tua Indonesia.
           </p>

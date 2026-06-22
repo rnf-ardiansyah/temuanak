@@ -30,7 +30,7 @@ export function Solution() {
         <SectionHeading
           align="center"
           eyebrow="Solusinya"
-          title={<>TemuAnak Menyederhanakan <br className="hidden md:block" /> Situasi Darurat.</>}
+          title={<>Temu Anak Menyederhanakan <br className="hidden md:block" /> Situasi Darurat.</>}
           description="Tiga langkah sederhana yang menyiapkan jalur kontak cepat sebelum darurat terjadi."
         />
 

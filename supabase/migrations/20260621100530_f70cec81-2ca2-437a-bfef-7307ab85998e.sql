@@ -108,10 +108,12 @@ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
 $$;
 GRANT EXECUTE ON FUNCTION public.get_public_qr(TEXT) TO anon, authenticated;
 
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
+
 -- Token generator
 CREATE OR REPLACE FUNCTION public.generate_qr_token()
-RETURNS TEXT LANGUAGE sql VOLATILE AS $$
-  SELECT encode(gen_random_bytes(8), 'hex')
+RETURNS TEXT LANGUAGE sql VOLATILE SET search_path = public, extensions AS $$
+  SELECT encode(extensions.gen_random_bytes(8), 'hex')
 $$;
 
 -- Auto-create qr_code on child insert
