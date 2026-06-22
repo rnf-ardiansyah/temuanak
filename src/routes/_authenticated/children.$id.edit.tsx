@@ -11,7 +11,7 @@ const childQuery = (id: string, fn: (args: { data: { id: string } }) => Promise<
   queryOptions({ queryKey: ["child", id], queryFn: () => fn({ data: { id } }) });
 
 export const Route = createFileRoute("/_authenticated/children/$id/edit")({
-  head: () => ({ meta: [{ title: "Edit Profil · Temu Anak" }] }),
+  head: () => ({ meta: [{ title: "Edit Profil · TemuAnak" }] }),
   component: EditChildPage,
 });
 

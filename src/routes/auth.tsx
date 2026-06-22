@@ -8,8 +8,8 @@ import { normalizePhone, phoneRegex } from "@/lib/format";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Masuk · Temu Anak" },
-      { name: "description", content: "Masuk ke Temu Anak dengan OTP via Email atau SMS." },
+      { title: "Masuk · TemuAnak" },
+      { name: "description", content: "Masuk ke TemuAnak dengan OTP via Email atau SMS." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -75,11 +75,11 @@ function AuthPage() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-[var(--shadow-card)]">
             <ShieldCheck className="h-5 w-5" />
           </span>
-          <span className="text-lg font-bold tracking-tight">Temu Anak</span>
+          <span className="text-lg font-bold tracking-tight">TemuAnak</span>
         </Link>
 
         <div className="mt-12">
-          <h1 className="text-4xl font-extrabold tracking-tight">Masuk ke Temu Anak</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight">Masuk ke TemuAnak</h1>
           <p className="mt-3 text-base text-muted-foreground">
             Tanpa password. Kami akan kirim kode OTP ke email atau HP kamu.
           </p>
@@ -134,7 +134,7 @@ function AuthPage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Dengan masuk, kamu menyetujui penggunaan Temu Anak.
+          Dengan masuk, kamu menyetujui penggunaan TemuAnak.
         </p>
       </div>
     </div>

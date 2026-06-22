@@ -7,7 +7,7 @@ import { createChild } from "@/lib/children.functions";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/children/new")({
-  head: () => ({ meta: [{ title: "Tambah Profil Anak · Temu Anak" }] }),
+  head: () => ({ meta: [{ title: "Tambah Profil Anak · TemuAnak" }] }),
   component: NewChildPage,
 });
 

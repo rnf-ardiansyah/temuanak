@@ -24,7 +24,7 @@ export function QrDemo() {
                 <QrPlaceholder size={25} className="p-0" />
               </div>
               <p className="mt-6 text-sm font-medium text-secondary-foreground">
-                temu-anak.id/q/<span className="text-foreground">ara-2026</span>
+                temuanak.id/q/<span className="text-foreground">ara-2026</span>
               </p>
             </div>
           </div>

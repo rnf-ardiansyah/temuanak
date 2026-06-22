@@ -16,7 +16,7 @@ import { FinalCta } from "@/components/landing/FinalCta";
 import { Footer } from "@/components/landing/Footer";
 import { useReveal } from "@/hooks/use-reveal";
 
-const TITLE = "Temu Anak — QR Darurat untuk Membantu Anak Kembali ke Orang Tuanya";
+const TITLE = "TemuAnak — QR Darurat untuk Membantu Anak Kembali ke Orang Tuanya";
 const DESCRIPTION =
   "Buat QR Darurat untuk anak Anda dalam 1 menit. Saat anak terpisah di tempat ramai, siapa pun bisa scan QR dan langsung menghubungi orang tua via WhatsApp.";
 

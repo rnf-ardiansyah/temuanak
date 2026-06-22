@@ -14,7 +14,7 @@ function publicClient() {
 
 export const toggleQr = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((d: unknown) =>
+  .inputValidator((d: unknown) =>
     z.object({ qrId: z.string().uuid(), active: z.boolean() }).parse(d),
   )
   .handler(async ({ data, context }) => {
@@ -28,7 +28,7 @@ export const toggleQr = createServerFn({ method: "POST" })
 
 export const regenerateQr = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .validator((d: unknown) => z.object({ qrId: z.string().uuid() }).parse(d))
+  .inputValidator((d: unknown) => z.object({ qrId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
     // Generate new token via Postgres helper through a tiny rpc-less roundtrip:
     // simplest: call generate via raw select using rpc? We don't have it as rpc.
@@ -45,7 +45,7 @@ export const regenerateQr = createServerFn({ method: "POST" })
   });
 
 export const getPublicQr = createServerFn({ method: "GET" })
-  .validator((d: { token: string }) =>
+  .inputValidator((d: { token: string }) =>
     z.object({ token: z.string().min(8).max(64) }).parse(d),
   )
   .handler(async ({ data }) => {
@@ -68,7 +68,7 @@ export const getPublicQr = createServerFn({ method: "GET" })
   });
 
 export const recordQrView = createServerFn({ method: "POST" })
-  .validator((d: { token: string; uaHash?: string }) =>
+  .inputValidator((d: { token: string; uaHash?: string }) =>
     z.object({ token: z.string().min(8).max(64), uaHash: z.string().max(64).optional() }).parse(d),
   )
   .handler(async ({ data }) => {

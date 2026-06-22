@@ -28,7 +28,7 @@ const childQuery = (id: string, fn: (args: { data: { id: string } }) => Promise<
   });
 
 export const Route = createFileRoute("/_authenticated/children/$id/")({
-  head: () => ({ meta: [{ title: "Detail Anak · Temu Anak" }] }),
+  head: () => ({ meta: [{ title: "Detail Anak · TemuAnak" }] }),
   component: ChildDetail,
 });
 
@@ -66,7 +66,7 @@ function ChildDetail() {
     const canvas = canvasRef.current?.querySelector("canvas");
     if (!canvas) return;
     const link = document.createElement("a");
-    link.download = `temu-anak-${child.nickname}.png`;
+    link.download = `temuanak-${child.nickname}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
   }

@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
+import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
@@ -38,6 +39,9 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
+  useEffect(() => {
+    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -76,14 +80,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#2563EB" },
-      { title: "Temu Anak — QR Darurat untuk Anak" },
+      { title: "TemuAnak — QR Darurat untuk Anak" },
       {
         name: "description",
         content:
           "Buat QR Darurat anak dalam 1 menit. Saat anak terpisah, siapa pun bisa scan QR dan langsung menghubungi kamu via WhatsApp.",
       },
-      { name: "author", content: "Temu Anak" },
-      { property: "og:title", content: "Temu Anak — QR Darurat untuk Anak" },
+      { name: "author", content: "TemuAnak" },
+      { property: "og:title", content: "TemuAnak — QR Darurat untuk Anak" },
       {
         property: "og:description",
         content:

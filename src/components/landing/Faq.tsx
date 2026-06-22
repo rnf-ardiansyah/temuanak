@@ -10,7 +10,7 @@ import { SectionHeading } from "./primitives/SectionHeading";
 const faqs = [
   {
     q: "Apakah perlu install aplikasi?",
-    a: "Tidak. Temu Anak adalah PWA berbasis web. Orang yang menemukan anak cukup membuka kamera ponsel dan memindai QR — tidak ada aplikasi yang perlu diunduh.",
+    a: "Tidak. TemuAnak adalah PWA berbasis web. Orang yang menemukan anak cukup membuka kamera ponsel dan memindai QR — tidak ada aplikasi yang perlu diunduh.",
   },
   {
     q: "Apakah QR bisa dinonaktifkan?",

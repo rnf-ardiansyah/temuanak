@@ -12,7 +12,7 @@ const childrenQuery = (fn: () => Promise<unknown>) =>
   });
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard · Temu Anak" }] }),
+  head: () => ({ meta: [{ title: "Dashboard · TemuAnak" }] }),
   component: DashboardPage,
 });
 

@@ -12,11 +12,11 @@ export const Route = createFileRoute("/qr/$token")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: loaderData ? `${loaderData.nickname} · QR Darurat Temu Anak` : "QR · Temu Anak" },
+      { title: loaderData ? `${loaderData.nickname} · QR Darurat TemuAnak` : "QR · TemuAnak" },
       { name: "robots", content: "noindex" },
       {
         name: "description",
-        content: "Halaman QR Darurat Temu Anak — bantu hubungi orang tua.",
+        content: "Halaman QR Darurat TemuAnak — bantu hubungi orang tua.",
       },
     ],
   }),
@@ -51,7 +51,7 @@ function PublicQrPage() {
             Pemilik telah menonaktifkan QR ini. Mohon cari bantuan lewat petugas terdekat.
           </p>
           <span className="mt-8 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            <ShieldCheck className="h-4 w-4 text-primary" /> Temu Anak
+            <ShieldCheck className="h-4 w-4 text-primary" /> TemuAnak
           </span>
         </div>
       </div>
@@ -64,7 +64,7 @@ function PublicQrPage() {
     <div className="min-h-screen bg-background">
       <div className="mx-auto max-w-md px-6 py-8">
         <header className="flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
-          <ShieldCheck className="h-4 w-4" /> Temu Anak
+          <ShieldCheck className="h-4 w-4" /> TemuAnak
         </header>
 
         <div className="mt-6 rounded-3xl border border-danger/30 bg-danger/5 p-4 text-center">
