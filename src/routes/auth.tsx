@@ -21,6 +21,7 @@ function AuthPage() {
   const [tab, setTab] = useState<"email" | "phone">("email");
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorType, setErrorType] = useState<"rate_limit" | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -32,6 +33,7 @@ function AuthPage() {
     e.preventDefault();
     if (loading) return;
     setLoading(true);
+    setErrorType(null);
     try {
       if (tab === "email") {
         if (!/^\S+@\S+\.\S+$/.test(value)) {
@@ -63,6 +65,33 @@ function AuthPage() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Gagal mengirim OTP";
       toast.error(msg);
+      if (
+        msg.toLowerCase().includes("rate limit") ||
+        msg.toLowerCase().includes("too many requests") ||
+        msg.toLowerCase().includes("limit exceeded")
+      ) {
+        setErrorType("rate_limit");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDemoLogin() {
+    if (loading) return;
+    setLoading(true);
+    setErrorType(null);
+    try {
+      const { error } = await supabase.auth.signInAnonymously();
+      if (error) throw error;
+      toast.success("Berhasil masuk sebagai Tamu");
+      navigate({ to: "/dashboard", replace: true });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Gagal masuk sebagai Tamu";
+      toast.error(msg);
+      if (msg.includes("not enabled")) {
+        toast.info("Silakan aktifkan 'Anonymous sign-ins' di Supabase Dashboard (Authentication > Providers > Anonymous)");
+      }
     } finally {
       setLoading(false);
     }
@@ -130,8 +159,46 @@ function AuthPage() {
                 </>
               )}
             </button>
+
+            <div className="relative my-4 flex items-center justify-center">
+              <hr className="w-full border-border" />
+              <span className="absolute bg-card px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                atau
+              </span>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={loading}
+              className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-border bg-transparent px-6 text-base font-semibold text-foreground transition-all hover:bg-secondary disabled:opacity-60"
+            >
+              Masuk sebagai Tamu (Demo)
+            </button>
           </form>
         </div>
+
+        {errorType === "rate_limit" && (
+          <div className="mt-6 rounded-2xl border border-yellow-500/25 bg-yellow-500/5 p-5 text-sm text-yellow-700 dark:text-yellow-400">
+            <h3 className="font-bold text-base mb-1">Limit Pengiriman Email/SMS Tercapai</h3>
+            <p className="text-xs leading-relaxed text-muted-foreground">
+              Supabase membatasi pengiriman email/SMS OTP default (maksimal 3 email per jam) pada tier gratis.
+            </p>
+            <div className="mt-3 flex flex-col gap-2">
+              <p className="text-xs font-semibold">Cara Mengatasi di Supabase Dashboard:</p>
+              <ol className="list-decimal list-inside text-xs text-muted-foreground space-y-1">
+                <li>Buka project Anda di <b>Supabase Dashboard</b>.</li>
+                <li>Pilih menu <b>Authentication &gt; Providers &gt; Email</b>.</li>
+                <li>Aktifkan dan konfigurasi <b>SMTP Settings</b> menggunakan provider eksternal (seperti Resend, SendGrid, atau Mailgun).</li>
+              </ol>
+              <p className="text-xs font-semibold mt-1">Solusi Cepat untuk Uji Coba (Testing):</p>
+              <ul className="list-disc list-inside text-xs text-muted-foreground space-y-1">
+                <li>Gunakan tombol <b>Masuk sebagai Tamu (Demo)</b> di atas untuk langsung mencoba aplikasi secara instan tanpa perlu OTP.</li>
+                <li>Atau daftarkan <b>Test OTPs</b> di menu Email Supabase untuk email Anda (contoh kode: 123456) agar tidak memicu pengiriman email asli.</li>
+              </ul>
+            </div>
+          </div>
+        )}
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
           Dengan masuk, kamu menyetujui penggunaan TemuAnak.
