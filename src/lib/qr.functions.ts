@@ -56,8 +56,13 @@ export const getPublicQr = createServerFn({ method: "GET" })
     if (!row) return null;
     let photoUrl: string | null = null;
     if (row.photo_url) {
-      const { data: pub } = supa.storage.from("child-photos").getPublicUrl(row.photo_url);
-      photoUrl = pub.publicUrl;
+      // Bucket is private; mint a short-lived signed URL. Access is already gated
+      // by a valid active QR token via get_public_qr above.
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: signed } = await supabaseAdmin.storage
+        .from("child-photos")
+        .createSignedUrl(row.photo_url, 60 * 10);
+      photoUrl = signed?.signedUrl ?? null;
     }
     return { ...row, photo_url: photoUrl };
   });
