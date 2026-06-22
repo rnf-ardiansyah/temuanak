@@ -54,7 +54,6 @@ function AuthPage() {
     }
 
     setLoading(true);
-    setSignupSuccessNote(false);
 
     try {
       if (mode === "signin") {
@@ -127,7 +126,6 @@ function AuthPage() {
               type="button"
               onClick={() => {
                 setMode("signin");
-                setSignupSuccessNote(false);
               }}
               className={`flex-1 rounded-xl py-2.5 text-sm font-semibold transition-all ${
                 mode === "signin"
@@ -141,7 +139,6 @@ function AuthPage() {
               type="button"
               onClick={() => {
                 setMode("signup");
-                setSignupSuccessNote(false);
               }}
               className={`flex-1 rounded-xl py-2.5 text-sm font-semibold transition-all ${
                 mode === "signup"
