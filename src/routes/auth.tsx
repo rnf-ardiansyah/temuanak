@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Mail, ShieldCheck, ArrowRight, Loader2, Lock, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { signUpAdmin } from "@/lib/auth.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -24,7 +25,6 @@ function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [signupSuccessNote, setSignupSuccessNote] = useState(false);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -68,21 +68,25 @@ function AuthPage() {
         toast.success("Berhasil masuk!");
         navigate({ to: "/dashboard", replace: true });
       } else {
-        const { data, error } = await supabase.auth.signUp({
+        // Use the admin service role to register and auto-confirm user,
+        // avoiding rate limit email limits entirely.
+        await signUpAdmin({
+          data: {
+            email: trimmedEmail,
+            password: password,
+          },
+        });
+
+        // Immediately sign the user in with password
+        const { error: loginError } = await supabase.auth.signInWithPassword({
           email: trimmedEmail,
           password: password,
         });
 
-        if (error) throw error;
+        if (loginError) throw loginError;
 
-        // If auto-login happened (email confirmation disabled in Supabase config)
-        if (data.session) {
-          toast.success("Pendaftaran berhasil & langsung masuk!");
-          navigate({ to: "/dashboard", replace: true });
-        } else {
-          toast.success("Pendaftaran berhasil!");
-          setSignupSuccessNote(true);
-        }
+        toast.success("Pendaftaran berhasil & langsung masuk!");
+        navigate({ to: "/dashboard", replace: true });
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
@@ -252,24 +256,7 @@ function AuthPage() {
           </form>
         </div>
 
-        {/* Signup Success Note (helpful information for email limits) */}
-        {signupSuccessNote && (
-          <div className="mt-5 rounded-2xl border border-blue-500/30 bg-blue-500/8 p-4">
-            <p className="text-sm font-semibold text-blue-700 dark:text-blue-400">
-              Registrasi Berhasil!
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-              Jika akun Anda memerlukan konfirmasi email, silakan cek kotak masuk/spam email Anda. 
-              Jika email verifikasi terhalang limit/tidak terkirim, Anda dapat menonaktifkan fitur konfirmasi email di dashboard Supabase Anda:
-            </p>
-            <p className="mt-2 text-xs font-semibold text-muted-foreground">
-              Supabase Dashboard → Authentication → Providers → Email → matikan "Confirm email".
-            </p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Setelah mematikan pengaturan tersebut, Anda bisa langsung masuk (Sign In) menggunakan akun ini.
-            </p>
-          </div>
-        )}
+
 
         <p className="mt-auto pt-8 text-center text-xs text-muted-foreground">
           Dengan masuk, kamu menyetujui penggunaan TemuAnak.
